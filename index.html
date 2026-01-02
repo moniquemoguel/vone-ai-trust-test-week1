@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI or Not? – The Trust Test</title>
+
+<style>
+:root{
+  --vone:#4797cd;
+  --bg:#0e1424;
+  --card:#1b2236;
+  --text:#eef3f8;
+  --muted:#aab4c3;
+  --border:#2b3550;
+  --good:#2ecc71;
+  --warn:#f1c40f;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(900px 500px at 20% 10%, rgba(71,151,205,.25), transparent 60%), var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.app{
+  width:100%;
+  max-width:900px;
+  background:rgba(15,20,40,.9);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+}
+header h1{
+  margin:0;
+  font-size:18px;
+}
+header p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+main{
+  padding:20px;
+  display:grid;
+  grid-template-columns:1.3fr .7fr;
+  gap:18px;
+}
+@media(max-width:900px){
+  main{grid-template-columns:1fr}
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+}
+
+h2{
+  margin:0 0 8px;
+  font-size:16px;
+}
+p{
+  margin:0 0 12px;
+  font-size:14px;
+  line-height:1.45;
+  color:var(--muted);
+}
+
+.scenario{
+  font-size:15px;
+  color:var(--text);
+  margin-bottom:14px;
+}
+
+.buttons{
+  display:grid;
+  gap:10px;
+}
+button{
+  background:#12192c;
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:12px;
+  border-radius:14px;
+  font-size:14px;
+  cursor:pointer;
+}
+button:hover{border-color:var(--vone)}
+button:disabled{opacity:.6;cursor:not-allowed}
+
+.feedback{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(71,151,205,.15);
+  border:1px solid var(--border);
+  font-size:13px;
+}
+
+.sidebar h3{
+  font-size:13px;
+  margin:0 0 8px;
+}
+.meter{
+  height:10px;
+  background:#0f172a;
+  border:1px solid var(--border);
+  border-radius:999px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:var(--vone);
+  width:0%;
+}
+
+.stat{
+  margin-top:14px;
+  font-size:13px;
+}
+.stat strong{
+  display:block;
+  font-size:18px;
+  margin-top:4px;
+}
+
+.codebox{
+  display:none;
+  margin-top:14px;
+  padding:12px;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  background:#0f172a;
+}
+.code{
+  font-family:monospace;
+  font-size:16px;
+  margin-top:6px;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header>
+  <h1>AI or Not? – The Trust Test</h1>
+  <p>Week 1 · Understanding AI, everyday use, and why governance matters</p>
+</header>
+
+<main>
+<section class="card">
+  <h2 id="title"></h2>
+  <p class="scenario" id="scenario"></p>
+
+  <div class="buttons" id="choices"></div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <button id="nextBtn" disabled style="margin-top:14px;">Continue</button>
+
+  <div class="codebox" id="codeBox">
+    <strong>Completion Code</strong>
+    <div class="code" id="code"></div>
+  </div>
+</section>
+
+<aside class="card sidebar">
+  <h3>Trust Meter</h3>
+  <div class="meter"><div class="fill" id="trustFill"></div></div>
+
+  <div class="stat">
+    Score
+    <strong id="score">0</strong>
+  </div>
+
+  <div class="stat">
+    Status
+    <strong id="status">Evaluating</strong>
+  </div>
+</aside>
+</main>
+</div>
+
+<script>
+const scenarios=[
+{
+ title:"Scenario 1",
+ text:"Your school uses software that automatically checks assignments for plagiarism by comparing text to a large database.",
+ ai:true,
+ oversight:false,
+ explain:"This is AI-assisted pattern matching. It supports decisions but does not replace human judgment."
+},
+{
+ title:"Scenario 2",
+ text:"A calculator gives the same answer every time based on a fixed formula.",
+ ai:false,
+ oversight:false,
+ explain:"This is automation, not AI. It follows fixed rules and does not learn."
+},
+{
+ title:"Scenario 3",
+ text:"A streaming app recommends shows based on what you watched before.",
+ ai:true,
+ oversight:false,
+ explain:"This uses machine learning to predict preferences, but low-risk recommendations don’t usually require oversight."
+},
+{
+ title:"Scenario 4",
+ text:"An AI system screens job applications and automatically rejects some candidates.",
+ ai:true,
+ oversight:true,
+ explain:"This impacts people’s opportunities. Human oversight and accountability are essential."
+},
+{
+ title:"Scenario 5",
+ text:"A chatbot answers common customer questions using pre-written scripts.",
+ ai:false,
+ oversight:false,
+ explain:"Rule-based chatbots are not true AI. They do not learn or adapt."
+},
+{
+ title:"Scenario 6",
+ text:"An AI tool predicts which students may fail a course and alerts staff.",
+ ai:true,
+ oversight:true,
+ explain:"Predictions affecting people require governance, transparency, and human review."
+}
+];
+
+let index=0;
+let score=0;
+
+const title=document.getElementById("title");
+const scenario=document.getElementById("scenario");
+const choices=document.getElementById("choices");
+const feedback=document.getElementById("feedback");
+const nextBtn=document.getElementById("nextBtn");
+const trustFill=document.getElementById("trustFill");
+const scoreEl=document.getElementById("score");
+const statusEl=document.getElementById("status");
+const codeBox=document.getElementById("codeBox");
+const codeEl=document.getElementById("code");
+
+function render(){
+ const s=scenarios[index];
+ title.textContent=s.title;
+ scenario.textContent=s.text;
+ feedback.style.display="none";
+ nextBtn.disabled=true;
+ choices.innerHTML="";
+
+ const opts=[
+   {label:"This is AI", val:"ai"},
+   {label:"This is NOT AI", val:"not"},
+   {label:"Human oversight IS needed", val:"oversight"},
+   {label:"Human oversight is NOT needed", val:"nooversight"}
+ ];
+
+ opts.forEach(o=>{
+   const b=document.createElement("button");
+   b.textContent=o.label;
+   b.onclick=()=>select(o.val);
+   choices.appendChild(b);
+ });
+}
+
+function select(val){
+ const s=scenarios[index];
+ let correct=false;
+
+ if((val==="ai" && s.ai)||(val==="not" && !s.ai)) correct=true;
+ if((val==="oversight" && s.oversight)||(val==="nooversight" && !s.oversight)) correct=true;
+
+ score+=correct?10:4;
+ trustFill.style.width=Math.min(score,100)+"%";
+ scoreEl.textContent=score;
+
+ statusEl.textContent=score>=60?"Building Trust":"Learning";
+
+ feedback.textContent=s.explain;
+ feedback.style.display="block";
+ nextBtn.disabled=false;
+
+ [...choices.children].forEach(b=>b.disabled=true);
+}
+
+nextBtn.onclick=()=>{
+ index++;
+ if(index<scenarios.length){
+   render();
+ }else{
+   finish();
+ }
+};
+
+function finish(){
+ title.textContent="Simulation Complete";
+ scenario.textContent="You’ve seen how AI appears in everyday tools and why governance matters when systems affect people.";
+ choices.innerHTML="";
+ feedback.style.display="none";
+ nextBtn.style.display="none";
+ const code="VONE-AI-W1-"+score+"-"+Math.floor(100+Math.random()*900);
+ codeEl.textContent=code;
+ codeBox.style.display="block";
+ statusEl.textContent="Completed";
+}
+
+render();
+</script>
+</body>
+</html>
