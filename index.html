@@ -15,6 +15,7 @@
   --border:#2b3550;
   --good:#2ecc71;
   --warn:#f1c40f;
+  --bad:#ff5252;
 }
 
 *{box-sizing:border-box}
@@ -32,8 +33,8 @@ body{
 
 .app{
   width:100%;
-  max-width:900px;
-  background:rgba(15,20,40,.9);
+  max-width:980px;
+  background:rgba(15,20,40,.92);
   border:1px solid var(--border);
   border-radius:18px;
   overflow:hidden;
@@ -43,25 +44,16 @@ header{
   padding:16px 20px;
   border-bottom:1px solid var(--border);
 }
-header h1{
-  margin:0;
-  font-size:18px;
-}
-header p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
+header h1{margin:0;font-size:18px}
+header p{margin:4px 0 0;color:var(--muted);font-size:13px}
 
 main{
   padding:20px;
   display:grid;
-  grid-template-columns:1.3fr .7fr;
+  grid-template-columns:1.25fr .75fr;
   gap:18px;
 }
-@media(max-width:900px){
-  main{grid-template-columns:1fr}
-}
+@media(max-width:900px){ main{grid-template-columns:1fr} }
 
 .card{
   background:var(--card);
@@ -70,27 +62,38 @@ main{
   padding:16px;
 }
 
-h2{
-  margin:0 0 8px;
-  font-size:16px;
-}
-p{
-  margin:0 0 12px;
-  font-size:14px;
-  line-height:1.45;
-  color:var(--muted);
-}
-
-.scenario{
-  font-size:15px;
-  color:var(--text);
+.howto{
+  border:1px solid var(--border);
+  background:rgba(71,151,205,.10);
+  border-radius:14px;
+  padding:12px;
   margin-bottom:14px;
 }
+.howto h2{margin:0 0 6px;font-size:14px}
+.howto ul{margin:0;padding-left:18px;color:var(--muted);font-size:13px;line-height:1.4}
+.howto li{margin:6px 0}
 
-.buttons{
-  display:grid;
-  gap:10px;
+h3{margin:0 0 8px;font-size:15px}
+p{margin:0 0 12px;font-size:14px;line-height:1.45;color:var(--muted)}
+.scenario{font-size:15px;color:var(--text);margin-bottom:10px}
+
+.badgeRow{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  margin:8px 0 12px;
 }
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 10px;border-radius:999px;
+  border:1px solid var(--border);
+  font-size:12px;color:var(--muted);
+  background:#111a2e;
+}
+.badge strong{color:var(--text)}
+.badge.good{border-color:rgba(46,204,113,.5); background:rgba(46,204,113,.12); color:rgba(230,255,240,.95)}
+.badge.warn{border-color:rgba(241,196,15,.55); background:rgba(241,196,15,.12); color:rgba(255,251,230,.95)}
+.badge.bad{border-color:rgba(255,82,82,.55); background:rgba(255,82,82,.10); color:rgba(255,235,235,.95)}
+
+.buttons{display:grid;gap:10px}
 button{
   background:#12192c;
   border:1px solid var(--border);
@@ -108,15 +111,35 @@ button:disabled{opacity:.6;cursor:not-allowed}
   margin-top:12px;
   padding:12px;
   border-radius:12px;
-  background:rgba(71,151,205,.15);
   border:1px solid var(--border);
   font-size:13px;
+  line-height:1.35;
+  white-space:pre-wrap;
 }
+.feedback.good{background:rgba(46,204,113,.12)}
+.feedback.warn{background:rgba(241,196,15,.12)}
+.feedback.bad{background:rgba(255,82,82,.10)}
 
-.sidebar h3{
-  font-size:13px;
-  margin:0 0 8px;
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-top:14px;
 }
+.btn{
+  background:#0f172a;
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  cursor:pointer;
+  font-size:13px;
+}
+.btn.primary{
+  background:rgba(71,151,205,.22);
+  border-color:rgba(71,151,205,.55);
+}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+
+.sidebar h4{font-size:13px;margin:0 0 8px;color:rgba(255,255,255,.9)}
 .meter{
   height:10px;
   background:#0f172a;
@@ -124,21 +147,12 @@ button:disabled{opacity:.6;cursor:not-allowed}
   border-radius:999px;
   overflow:hidden;
 }
-.fill{
-  height:100%;
-  background:var(--vone);
-  width:0%;
-}
+.fill{height:100%;background:var(--vone);width:0%}
 
-.stat{
-  margin-top:14px;
-  font-size:13px;
-}
-.stat strong{
-  display:block;
-  font-size:18px;
-  margin-top:4px;
-}
+.stat{margin-top:14px;font-size:13px}
+.stat strong{display:block;font-size:18px;margin-top:4px}
+
+.small{font-size:12px;color:var(--muted);line-height:1.4;margin-top:8px}
 
 .codebox{
   display:none;
@@ -149,7 +163,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
   background:#0f172a;
 }
 .code{
-  font-family:monospace;
+  font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size:16px;
   margin-top:6px;
 }
@@ -160,28 +174,51 @@ button:disabled{opacity:.6;cursor:not-allowed}
 <div class="app">
 <header>
   <h1>AI or Not? – The Trust Test</h1>
-  <p>Week 1 · Understanding AI, everyday use, and why governance matters</p>
+  <p>Week 1 · What AI is (and isn’t) + why governance and oversight build trust</p>
 </header>
 
 <main>
 <section class="card">
-  <h2 id="title"></h2>
+  <div class="howto" id="howto">
+    <h2>How to play (1 minute)</h2>
+    <ul>
+      <li>You’ll see 6 real-world situations.</li>
+      <li>Answer two questions for each one: <strong>Is it AI?</strong> then <strong>Does it need human oversight?</strong></li>
+      <li>You’ll get instant feedback, and your Trust Score will update.</li>
+      <li>At the end, you’ll get a completion code to submit in VONE.</li>
+    </ul>
+  </div>
+
+  <h3 id="title"></h3>
   <p class="scenario" id="scenario"></p>
+
+  <div class="badgeRow">
+    <span class="badge"><strong id="stepLabel">Step:</strong> <span id="stepName">Is this AI?</span></span>
+    <span class="badge"><strong>Progress:</strong> <span id="progress">1 / 6</span></span>
+  </div>
 
   <div class="buttons" id="choices"></div>
 
   <div class="feedback" id="feedback"></div>
 
-  <button id="nextBtn" disabled style="margin-top:14px;">Continue</button>
+  <div class="actions">
+    <button class="btn primary" id="nextBtn" disabled>Continue</button>
+    <button class="btn" id="restartBtn">Restart</button>
+  </div>
 
   <div class="codebox" id="codeBox">
     <strong>Completion Code</strong>
     <div class="code" id="code"></div>
+    <p class="small" id="scoreMeaning"></p>
+    <div class="actions">
+      <button class="btn primary" id="playAgainBtn">Play Again</button>
+      <a class="btn" id="exitBtn" href="#" style="text-decoration:none;display:inline-flex;align-items:center;">Exit</a>
+    </div>
   </div>
 </section>
 
 <aside class="card sidebar">
-  <h3>Trust Meter</h3>
+  <h4>Trust Score (0–100)</h4>
   <div class="meter"><div class="fill" id="trustFill"></div></div>
 
   <div class="stat">
@@ -191,137 +228,238 @@ button:disabled{opacity:.6;cursor:not-allowed}
 
   <div class="stat">
     Status
-    <strong id="status">Evaluating</strong>
+    <strong id="status">Getting Started</strong>
   </div>
+
+  <p class="small">
+    Tip: Oversight matters most when AI decisions can affect someone’s opportunities, safety, or fairness.
+  </p>
 </aside>
 </main>
 </div>
 
 <script>
-const scenarios=[
-{
- title:"Scenario 1",
- text:"Your school uses software that automatically checks assignments for plagiarism by comparing text to a large database.",
- ai:true,
- oversight:false,
- explain:"This is AI-assisted pattern matching. It supports decisions but does not replace human judgment."
-},
-{
- title:"Scenario 2",
- text:"A calculator gives the same answer every time based on a fixed formula.",
- ai:false,
- oversight:false,
- explain:"This is automation, not AI. It follows fixed rules and does not learn."
-},
-{
- title:"Scenario 3",
- text:"A streaming app recommends shows based on what you watched before.",
- ai:true,
- oversight:false,
- explain:"This uses machine learning to predict preferences, but low-risk recommendations don’t usually require oversight."
-},
-{
- title:"Scenario 4",
- text:"An AI system screens job applications and automatically rejects some candidates.",
- ai:true,
- oversight:true,
- explain:"This impacts people’s opportunities. Human oversight and accountability are essential."
-},
-{
- title:"Scenario 5",
- text:"A chatbot answers common customer questions using pre-written scripts.",
- ai:false,
- oversight:false,
- explain:"Rule-based chatbots are not true AI. They do not learn or adapt."
-},
-{
- title:"Scenario 6",
- text:"An AI tool predicts which students may fail a course and alerts staff.",
- ai:true,
- oversight:true,
- explain:"Predictions affecting people require governance, transparency, and human review."
-}
+/* Set your VONE exit destination when ready */
+const EXIT_URL = "https://voneacademy.com/courses"; // change if needed
+
+const scenarios = [
+  {
+    title:"Scenario 1",
+    text:"Your school uses software that checks assignments for plagiarism by comparing text to a large database.",
+    ai:true,
+    oversight:false,
+    explainAI:"This is AI-assisted pattern matching. It can help, but it doesn’t ‘think’ like a human.",
+    explainOversight:"Since it can flag work incorrectly, a human should review results before consequences happen — but it’s not usually making final decisions alone."
+  },
+  {
+    title:"Scenario 2",
+    text:"A calculator gives the same answer every time based on a fixed formula.",
+    ai:false,
+    oversight:false,
+    explainAI:"This is automation, not AI. It follows fixed rules and does not learn from data.",
+    explainOversight:"No special oversight is needed beyond normal checking, because it’s a predictable tool."
+  },
+  {
+    title:"Scenario 3",
+    text:"A streaming app recommends shows based on what you watched before.",
+    ai:true,
+    oversight:false,
+    explainAI:"This is machine learning making predictions about your preferences.",
+    explainOversight:"Because it’s low-risk (recommendations), oversight is usually minimal."
+  },
+  {
+    title:"Scenario 4",
+    text:"An AI system screens job applications and automatically rejects some candidates.",
+    ai:true,
+    oversight:true,
+    explainAI:"This is AI used to make decisions about people’s opportunities.",
+    explainOversight:"Yes. Decisions that affect fairness and opportunity need human oversight, accountability, and clear rules."
+  },
+  {
+    title:"Scenario 5",
+    text:"A chatbot answers common customer questions using pre-written scripts.",
+    ai:false,
+    oversight:false,
+    explainAI:"Rule-based chatbots aren’t ‘learning AI.’ They follow scripts and if/then rules.",
+    explainOversight:"Oversight is still helpful for quality, but it’s not the same governance risk as automated decisions about people."
+  },
+  {
+    title:"Scenario 6",
+    text:"An AI tool predicts which students may fail a course and alerts staff.",
+    ai:true,
+    oversight:true,
+    explainAI:"This is AI making a prediction based on patterns in data.",
+    explainOversight:"Yes. Predictions can shape how people are treated. Human review helps prevent unfair labeling and mistakes."
+  }
 ];
 
-let index=0;
-let score=0;
+let idx = 0;
+let score = 0;
 
-const title=document.getElementById("title");
-const scenario=document.getElementById("scenario");
-const choices=document.getElementById("choices");
-const feedback=document.getElementById("feedback");
-const nextBtn=document.getElementById("nextBtn");
-const trustFill=document.getElementById("trustFill");
-const scoreEl=document.getElementById("score");
-const statusEl=document.getElementById("status");
-const codeBox=document.getElementById("codeBox");
-const codeEl=document.getElementById("code");
+/* Each scenario has 2 steps: AI + Oversight */
+let step = 0; // 0 = AI question, 1 = Oversight question
+let answeredThisStep = false;
+
+const titleEl = document.getElementById("title");
+const scenarioEl = document.getElementById("scenario");
+const choicesEl = document.getElementById("choices");
+const feedbackEl = document.getElementById("feedback");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const trustFill = document.getElementById("trustFill");
+const scoreEl = document.getElementById("score");
+const statusEl = document.getElementById("status");
+const progressEl = document.getElementById("progress");
+const stepNameEl = document.getElementById("stepName");
+
+const codeBox = document.getElementById("codeBox");
+const codeEl = document.getElementById("code");
+const scoreMeaningEl = document.getElementById("scoreMeaning");
+const playAgainBtn = document.getElementById("playAgainBtn");
+const exitBtn = document.getElementById("exitBtn");
+
+exitBtn.href = EXIT_URL;
+
+function setStatus(){
+  if (score >= 85) statusEl.textContent = "Trust Builder";
+  else if (score >= 65) statusEl.textContent = "Responsible Thinker";
+  else if (score >= 45) statusEl.textContent = "Learning the Basics";
+  else statusEl.textContent = "Getting Started";
+}
+
+function updateScore(points){
+  score = Math.max(0, Math.min(100, score + points));
+  trustFill.style.width = score + "%";
+  scoreEl.textContent = score;
+  setStatus();
+}
 
 function render(){
- const s=scenarios[index];
- title.textContent=s.title;
- scenario.textContent=s.text;
- feedback.style.display="none";
- nextBtn.disabled=true;
- choices.innerHTML="";
+  const s = scenarios[idx];
+  titleEl.textContent = s.title;
+  scenarioEl.textContent = s.text;
 
- const opts=[
-   {label:"This is AI", val:"ai"},
-   {label:"This is NOT AI", val:"not"},
-   {label:"Human oversight IS needed", val:"oversight"},
-   {label:"Human oversight is NOT needed", val:"nooversight"}
- ];
+  progressEl.textContent = `${idx + 1} / ${scenarios.length}`;
+  stepNameEl.textContent = step === 0 ? "Is this AI?" : "Does it need human oversight?";
 
- opts.forEach(o=>{
-   const b=document.createElement("button");
-   b.textContent=o.label;
-   b.onclick=()=>select(o.val);
-   choices.appendChild(b);
- });
+  feedbackEl.style.display = "none";
+  nextBtn.disabled = true;
+  answeredThisStep = false;
+
+  choicesEl.innerHTML = "";
+  const opts = step === 0
+    ? [
+        { label:"Yes, this is AI", value:true },
+        { label:"No, this is not AI", value:false }
+      ]
+    : [
+        { label:"Yes, oversight is needed", value:true },
+        { label:"No, oversight is not needed", value:false }
+      ];
+
+  opts.forEach(o=>{
+    const b = document.createElement("button");
+    b.textContent = o.label;
+    b.onclick = ()=>select(o.value);
+    choicesEl.appendChild(b);
+  });
+}
+
+function showFeedback(correct, message){
+  feedbackEl.style.display = "block";
+  feedbackEl.className = "feedback " + (correct ? "good" : "warn");
+  feedbackEl.textContent = (correct ? "✅ Correct.\n\n" : "⚠️ Not quite.\n\n") + message;
+}
+
+function lockButtons(){
+  [...choicesEl.children].forEach(b=>b.disabled=true);
 }
 
 function select(val){
- const s=scenarios[index];
- let correct=false;
+  if (answeredThisStep) return;
+  answeredThisStep = true;
 
- if((val==="ai" && s.ai)||(val==="not" && !s.ai)) correct=true;
- if((val==="oversight" && s.oversight)||(val==="nooversight" && !s.oversight)) correct=true;
+  const s = scenarios[idx];
+  let correct = false;
 
- score+=correct?10:4;
- trustFill.style.width=Math.min(score,100)+"%";
- scoreEl.textContent=score;
+  if (step === 0){
+    correct = (val === s.ai);
+    updateScore(correct ? 10 : 4);
+    showFeedback(correct, s.explainAI);
+  } else {
+    correct = (val === s.oversight);
+    updateScore(correct ? 10 : 4);
+    showFeedback(correct, s.explainOversight);
+  }
 
- statusEl.textContent=score>=60?"Building Trust":"Learning";
-
- feedback.textContent=s.explain;
- feedback.style.display="block";
- nextBtn.disabled=false;
-
- [...choices.children].forEach(b=>b.disabled=true);
+  lockButtons();
+  nextBtn.disabled = false;
 }
 
-nextBtn.onclick=()=>{
- index++;
- if(index<scenarios.length){
-   render();
- }else{
-   finish();
- }
+nextBtn.onclick = ()=>{
+  // move to next step or next scenario
+  if (step === 0){
+    step = 1;
+    render();
+  } else {
+    step = 0;
+    idx++;
+    if (idx < scenarios.length){
+      render();
+    } else {
+      finish();
+    }
+  }
 };
 
 function finish(){
- title.textContent="Simulation Complete";
- scenario.textContent="You’ve seen how AI appears in everyday tools and why governance matters when systems affect people.";
- choices.innerHTML="";
- feedback.style.display="none";
- nextBtn.style.display="none";
- const code="VONE-AI-W1-"+score+"-"+Math.floor(100+Math.random()*900);
- codeEl.textContent=code;
- codeBox.style.display="block";
- statusEl.textContent="Completed";
+  titleEl.textContent = "Simulation Complete";
+  scenarioEl.textContent =
+    "You just practiced how to spot AI in everyday tools and when human oversight matters. That’s the foundation of AI governance and trust.";
+
+  choicesEl.innerHTML = "";
+  feedbackEl.style.display = "none";
+  nextBtn.style.display = "none";
+  restartBtn.style.display = "none";
+  document.getElementById("howto").style.display = "none";
+
+  const code = "VONE-AI-W1-" + score + "-" + Math.floor(100 + Math.random()*900);
+  codeEl.textContent = code;
+
+  scoreMeaningEl.textContent =
+    (score >= 85)
+      ? "Score meaning: Excellent. You can explain AI clearly and recognize when governance and oversight matter."
+      : (score >= 65)
+        ? "Score meaning: Strong foundation. You’re spotting AI and oversight needs in most situations."
+        : (score >= 45)
+          ? "Score meaning: Getting there. Review what AI is vs automation and when decisions affect people."
+          : "Score meaning: Starter level. Replay and focus on: AI vs automation, and oversight when outcomes affect people.";
+
+  codeBox.style.display = "block";
+  statusEl.textContent = "Completed";
 }
 
+function resetAll(){
+  idx = 0;
+  step = 0;
+  score = 0;
+  trustFill.style.width = "0%";
+  scoreEl.textContent = "0";
+  setStatus();
+  nextBtn.style.display = "inline-block";
+  restartBtn.style.display = "inline-block";
+  document.getElementById("howto").style.display = "block";
+  codeBox.style.display = "none";
+  nextBtn.disabled = true;
+  render();
+}
+
+restartBtn.onclick = resetAll;
+playAgainBtn.onclick = resetAll;
+
+setStatus();
 render();
 </script>
 </body>
 </html>
+
